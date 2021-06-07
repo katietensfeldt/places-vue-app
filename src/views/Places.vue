@@ -3,6 +3,9 @@
     <h1>Places</h1>
     <div>
       <h2>Make a new location</h2>
+      <ul>
+        <li class="error" v-for="error in errors" v-bind:key="error">{{ error }}</li>
+      </ul>
       <input type="text" v-model="newPlaceParams.name" placeholder="Name" />
       <br />
       <input type="text" v-model="newPlaceParams.address" placeholder="Address" />
@@ -33,7 +36,11 @@
   </div>
 </template>
 
-<style></style>
+<style>
+.error {
+  color: red;
+}
+</style>
 
 <script>
 import axios from "axios";
@@ -43,6 +50,7 @@ export default {
       places: [],
       newPlaceParams: {},
       currentPlace: {},
+      errors: [],
     };
   },
   created: function () {
@@ -63,7 +71,8 @@ export default {
           this.places.push(response.data);
         })
         .catch((error) => {
-          console.log(error.response.data);
+          console.log(error.response.data.errors);
+          this.errors = error.response.data.errors;
         });
     },
     showPlace: function (place) {
@@ -78,7 +87,8 @@ export default {
           this.currentPlace = {};
         })
         .catch((error) => {
-          console.log(error.response.data);
+          console.log(error.response.data.errors);
+          this.errors = error.response.data.errors;
         });
     },
     destroyPlace: function () {
